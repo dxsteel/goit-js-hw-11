@@ -32,6 +32,7 @@ async function fetchApi(searchQuevery, page){
         if(images.hits.length===0){
             throw new Error();
         } 
+      
         return images;
          } catch (error) {
         console.log(error);
@@ -56,22 +57,27 @@ refs.form.addEventListener("submit", event=>{
     resetPage();
     resetGallery();
   fetchApi(searchQuevery, page)
-  .then(images=>{
+      .then(images => {
     Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
     countImages+=images.hits.length;
     gallaryAdd (images.hits);
-    lightbox.refresh();
-    if(countImages===images.totalHits){
+          lightbox.refresh();
+          if (countImages === images.totalHits) {
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-   
-    } else { 
+          }
+            else if (images.hits.length < 40){
+            refs.buttonLoad.style.display = "none";
+        }
+          
+          else { 
         refs.buttonLoad.style.display = "block";
-    loadScroll();
+        loadScroll();
 }
     }
         
 )
-    .catch(error=>{
+      .catch(error => {
+          refs.buttonLoad.style.display = "none";
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
 })
 });
@@ -85,11 +91,16 @@ refs.buttonLoad.addEventListener("click", event=>{
    .then(images=>{ 
        countImages+=images.hits.length;
     gallaryAdd (images.hits);
-    lightbox.refresh();
+       lightbox.refresh();
     if(countImages===images.totalHits){
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
    
-    } else { 
+    }
+        else if (images.hits.length < 40){
+        refs.buttonLoad.style.display = "none";
+    }
+        
+    else { 
         refs.buttonLoad.style.display = "block";
         loadScroll();
     }

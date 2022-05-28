@@ -43,6 +43,7 @@ img {
 
 
 .photo-card {
+  display: block;
   position: relative;
   width: calc((100% - 80px)/4);
   height: auto;
